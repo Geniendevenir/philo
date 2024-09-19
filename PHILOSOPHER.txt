@@ -1,0 +1,45 @@
+PHILOSOPHER:
+
+I - Functions:
+	A : Common:
+	-memset
+	-printf
+	-malloc
+	-free
+	-write
+	-usleep
+	-gettimeofday
+	
+	B : Threads:
+	-pthread_create: Create a private Stack for the thread and its function as well as a Thread Control Block (TCB).
+	-pthread_detach: 
+	-pthread_join
+	
+	C : Mutexes:
+	-pthread_mutex_init:
+	-pthread_mutex_destroy
+	-pthread_mutex_lock
+	-pthread_mutex_unlock
+	
+	
+enum	e_state
+{
+	1-eat;
+	2-sleep;
+	2-think;
+	4-dead;
+}
+struct	s_philo	
+{
+	pthread struct	thread;
+	int		nbr;
+	enum		e_state;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	bool		fith_arg;
+	int		nbr_of_meal;
+	s_philo		prev;
+	s_philo		next;
+}
+
