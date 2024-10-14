@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:44:25 by allan             #+#    #+#             */
-/*   Updated: 2024/10/12 17:10:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/14 23:48:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ long	get_time(e_time_unit time_unit)
 
 void	wait_everyone(pthread_mutex_t *mutex, t_table *table)
 {
-	while (get_bool(mutex, &table->is_everyone_ready) == FALSE)
+	while (get_bool(mutex, &table->is_everyone_ready) == FALSE
+		|| table->start_simulation == 0)
 		;
 }
 

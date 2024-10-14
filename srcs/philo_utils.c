@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:22:15 by allan             #+#    #+#             */
-/*   Updated: 2024/10/13 16:43:43 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/14 23:35:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,5 +122,7 @@ void	write_status(e_status status, t_philo *philo)
 		printf("%ld %ld is thinking\n", time, philo->place);
 	else if (status == DIED)
 		printf("%ld %ld died\n", time, philo->place);
+	else if (status == DEBUG)
+		printf("%ld Tracker starts\n", time);
 	pthread_mutex_unlock(&philo->table->write_mutex);
 }

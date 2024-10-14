@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 01:07:54 by allan             #+#    #+#             */
-/*   Updated: 2024/10/13 01:43:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/14 23:35:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ typedef enum e_status
 	EATING,
 	SLEEPING,
 	THINKING,
-	DIED
+	DIED,
+	DEBUG
 }	e_status;
 
 typedef struct	s_fork
@@ -114,6 +115,7 @@ int		main(int argc, char **argv);
 
 //philosopher
 int		philosopher(t_philo *philo, t_fork *forks, t_table *table);
+void	*dinning_alone(void *arg);
 void	*cycle_of_life(void *arg);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
