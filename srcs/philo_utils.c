@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:22:15 by allan             #+#    #+#             */
-/*   Updated: 2024/09/19 04:41:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/13 16:43:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	ft_atoi(const char *nptr)
+long	ft_atol(const char *nptr)
 {
 	int		sign;
 	long	nbr;
@@ -46,19 +46,81 @@ int	ft_isdigit(int c)
 	return (NOT_DIGIT);
 }
 
-int	is_negative(long long int nbr)
+int	is_valid_arg(long value, int type)
 {
-	if (nbr < 0)
-		return (TRUE);
-	return (FALSE);
+	if (type == ARG_PHILO)
+	{
+		if (value < 1 || value > 200)
+			return (write(2, ERR_FIRST_ARG, 71), NOT_VALID);
+	}
+	else if (type == ARG_TIME)
+	{
+		if (value < 60 || value > INT_MAX)
+			return (write(2, ERR_TIME_ARG, 67), NOT_VALID);
+	}
+	else if (type == ARG_MEAL)
+	{
+		if (value < 1 || value > INT_MAX)
+			return (write(2, ERR_LAST_ARG, 72), NOT_VALID);
+	}
+	return (VALID);
 }
 
-void	print_arg(t_args argument)
+void	error_msg(char *error)
 {
-	printf("nbr_of_philo = %lld\n", argument.nbr_of_philo);
-	printf("time_to_die = %lld\n", argument.time_to_die);
-	printf("time_to_eat = %lld\n", argument.time_to_eat);
-	printf("time_to_sleep = %lld\n", argument.time_to_sleep);
-	if (argument.fith_argument == 1)
-		printf("nbr_of_meal = %lld\n", argument.nbr_of_meal);
+	if (!error)
+		return ;
+	write(2, error, strlen(error));
+}
+
+void	print_arg(t_table table)
+{
+	printf("nbr_of_philo = %ld\n", table.nbr_of_philo);
+	printf("time_to_die = %ld\n", table.time_to_die);
+	printf("time_to_eat = %ld\n", table.time_to_eat);
+	printf("time_to_sleep = %ld\n", table.time_to_sleep);
+	if (table.meal_to_finish != -1)
+		printf("nbr_of_meal = %ld\n", table.meal_to_finish);
+}
+
+void	print_table(t_philo *philo, t_table *table)
+{
+	long	i;
+
+	i = 0;
+	while (i < philo->table->nbr_of_philo)
+	{
+		printf("First Fork %ld <- Philo %ld -> Second Fork %ld\n", philo[i].first_fork->fork, philo[i].place, philo[i].second_fork->fork);
+		printf("First Fork Address %p Mutex Address %p\n", (void *) &philo[i].first_fork->fork, (void *) &philo[i].first_fork->mutex);
+		printf("Second Fork Address %p Mutex Address %p\n",(void *) &philo[i].second_fork->fork, (void *) &philo[i].second_fork->mutex);
+		i++;
+	}
+	printf("\n");
+	i = 0;
+	printf("TABLE Mutex Address: %p\n", (void *) &table->mutex_table);
+	while (i < philo->table->nbr_of_philo)
+	{
+		printf("Philo %ld Mutex Table Address: %p\n", philo[i].place, (void *) &philo[i].table->mutex_table);
+		printf("Philo %ld Mutex Write Address: %p\n", philo[i].place, (void *) &philo[i].table->write_mutex);
+		i++;
+	}
+}
+
+void	write_status(e_status status, t_philo *philo)
+{
+	long	time;
+
+	time = get_time(MILLISECOND) - philo->table->start_simulation;
+	pthread_mutex_lock(&philo->table->write_mutex);
+	if (status == FORK && !is_simulation_finished(philo->table))
+		printf("%ld %ld has taken a fork\n", time, philo->place);
+	else if (status == EATING && !is_simulation_finished(philo->table))
+		printf("%ld %ld is eating\n", time, philo->place);
+	else if (status == SLEEPING && !is_simulation_finished(philo->table))
+		printf("%ld %ld is sleeping\n", time, philo->place);
+	else if (status == THINKING && !is_simulation_finished(philo->table))
+		printf("%ld %ld is thinking\n", time, philo->place);
+	else if (status == DIED)
+		printf("%ld %ld died\n", time, philo->place);
+	pthread_mutex_unlock(&philo->table->write_mutex);
 }

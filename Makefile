@@ -12,9 +12,13 @@ CFLAGS				= -Wall -Wextra -Werror -I$(INC)
 RM					= rm -f
 
 # Concatenate all source files
-SRCS 				=	srcs/philo.c\
+SRCS 				=	srcs/main.c\
+						srcs/philosopher.c\
 						srcs/philo_init.c\
 						srcs/philo_utils.c\
+						srcs/philo_free.c\
+						srcs/philo_time.c\
+						srcs/philo_set_get.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

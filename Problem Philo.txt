@@ -1,0 +1,9 @@
+Problem Philo:
+
+./philo 2 200 100 100
+1728831204438 1 died
+	->Start before the synchronization
+	
+./philo 5 800 200 200
+0 2 died
+	-> No Philo should died
