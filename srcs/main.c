@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 01:05:54 by allan             #+#    #+#             */
-/*   Updated: 2024/10/13 01:42:47 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 19:22:28 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-/*
-
-valgrind --tool=helgrind: Check mutex not destroyed
-
-	To Free:
-	TABLE:
-			-mutext
-	FORK:
-			-Forks struct * table.nbr_of_philo;
-			-mutex * table.nbr_of_philo;
-	PHILO:
-			-Philo strcut * table->nbr_of_philo;
-
-*/
 
 int	main(int argc, char **argv)
 {
@@ -45,7 +30,6 @@ int	main(int argc, char **argv)
 		return (ERROR);
 	if (init_philo(&philo, forks, &table) == ERROR)
 		return (ERROR);
-	print_table(philo, &table);
 	if (philosopher(philo, forks, &table) == ERROR)
 		return (ERROR);
 	return (0);

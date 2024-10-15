@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   philo_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 01:52:30 by allan             #+#    #+#             */
-/*   Updated: 2024/10/13 16:33:49 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 19:22:00 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	free_all(t_philo *philo, t_fork *forks, t_table *table)
+{
+	pthread_mutex_destroy(&table->mutex_table);
+	pthread_mutex_destroy(&table->write_mutex);
+	pthread_mutex_destroy(&philo->mutex_philo);
+	free_forks(forks, table->nbr_of_philo);
+	free(philo);
+}
 
 void	free_forks(t_fork *forks, long nbr_of_fork)
 {
@@ -26,7 +35,22 @@ void	free_forks(t_fork *forks, long nbr_of_fork)
 	return ;
 }
 
-void	join_and_free(t_philo *philo, t_fork *forks, t_table *table)
+void	error_join_threads(t_philo *philo, long to_join)
+{
+	long	i;
+
+	i = 0;
+	if (to_join <= 0)
+		return ;
+	while (i < to_join)
+	{
+		if (pthread_join(philo[i].thread, NULL) != SUCCESS)
+			write(2, ERR_JOIN, strlen(ERR_JOIN));
+		i++;
+	}
+}
+
+void	join_threads(t_philo *philo, t_table *table)
 {
 	long	i;
 
@@ -34,11 +58,9 @@ void	join_and_free(t_philo *philo, t_fork *forks, t_table *table)
 	while (i < table->nbr_of_philo)
 	{
 		if (pthread_join(philo[i].thread, NULL) != SUCCESS)
-			write(2,ERR_JOIN, 42);
+			write(2, ERR_JOIN, strlen(ERR_JOIN));
 		i++;
 	}
 	if (pthread_join(table->track_end_simulation, NULL) != SUCCESS)
-		write(2,ERR_JOIN, 42);
-	free_forks(forks, table->nbr_of_philo);
-	free(philo);
+		write(2, ERR_JOIN, strlen(ERR_JOIN));
 }

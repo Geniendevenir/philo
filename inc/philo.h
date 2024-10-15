@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/19 01:07:54 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 15:07:30 by allan            ###   ########.fr       */
+/*   Created: 2024/10/15 19:23:00 by adebert           #+#    #+#             */
+/*   Updated: 2024/10/15 19:23:02 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void	*set_simulation_finished(void *arg);
 //philo_init
 int		check_arg(char **argv);
 int		init_table(int argc, char **argv, t_table *table);
+int		init_table_arg(int argc, char **argv, t_table *table);
 int		init_fork(t_fork **forks, t_table *table);
 int		init_philo(t_philo **philo, t_fork *forks, t_table *table);
 void	assign_fork(t_philo *philo, t_fork *forks, long fork_nbr);
@@ -142,13 +143,13 @@ int		ft_isdigit(int c);
 int		is_valid_arg(long value, int type);
 long	ft_atol(const char *nptr);
 void	error_msg(char *error);
-void	print_table(t_philo *philo, t_table *table);
-void	print_arg(t_table table);
 void	write_status(e_status status, t_philo *philo);
 
 //philo_free
+void	free_all(t_philo *philo, t_fork *forks, t_table *table);
 void	free_forks(t_fork *forks, long nbr_of_fork);
-void	join_and_free(t_philo *philo, t_fork *forks, t_table *table);
+void	error_join_threads(t_philo *philo, long to_join);
+void	join_threads(t_philo *philo, t_table *table);
 
 //philo_time
 long	get_elapsed_time_microseconds(struct timeval start, struct timeval end);

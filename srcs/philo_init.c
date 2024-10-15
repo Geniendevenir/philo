@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:40:43 by allan             #+#    #+#             */
-/*   Updated: 2024/10/13 01:17:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 19:21:20 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	check_arg(char **argv)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	while (argv[i])
-	{
-		j = 0;
-		while (argv[i][j] != '\0')
-		{
-			if (ft_isdigit(argv[i][j]) == NOT_DIGIT)
-				return (write(2, ERR_ARG, 111), ERROR);
-			j++;
-		}
-		if (i == ARG_PHILO && j > 3) //200
-			return (write(2, ERR_FIRST_ARG, 71), ERROR);
-		else if (i == ARG_MEAL && j > 10) //int size (2147483648)
-			return (write(2, ERR_LAST_ARG, 72), ERROR);
-		else if (j > 10) //int size (2147483648)
-			return (write(2, ERR_SIZE_ARG, 39), ERROR);
-		i++;
-	}
-	return (SUCCESS);
-}
 
 int	init_table(int argc, char **argv, t_table *table)
 {
@@ -48,6 +22,20 @@ int	init_table(int argc, char **argv, t_table *table)
 		return (ERROR);
 	else if (is_valid_arg(ft_atol(argv[4]), ARG_TIME) == NOT_VALID)
 		return (ERROR);
+	if (init_table_arg(argc, argv, table) == ERROR)
+		return (ERROR);
+	if (pthread_mutex_init(&table->mutex_table, NULL) != SUCCESS)
+		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
+	if (pthread_mutex_init(&table->write_mutex, NULL) != SUCCESS)
+	{
+		pthread_mutex_destroy(&table->mutex_table);
+		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
+	}
+	return (SUCCESS);
+}
+
+int	init_table_arg(int argc, char **argv, t_table *table)
+{
 	table->nbr_of_philo = ft_atol(argv[1]);
 	table->time_to_die = ft_atol(argv[2]) * 1000;
 	table->time_to_eat = ft_atol(argv[3]) * 1000;
@@ -66,11 +54,6 @@ int	init_table(int argc, char **argv, t_table *table)
 	table->is_everyone_ready = FALSE;
 	table->philo_full = 0;
 	table->nbr_philo_ready = 0;
-	if (pthread_mutex_init(&table->mutex_table, NULL) != SUCCESS)
-		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
-	if (pthread_mutex_init(&table->write_mutex, NULL) != SUCCESS)
-		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
-	print_arg(*table);
 	return (SUCCESS);
 }
 
@@ -96,10 +79,8 @@ int	init_fork(t_fork **forks, t_table *table)
 			pthread_mutex_destroy(&table->write_mutex);
 			return (write(2, ERR_MUTEX_INIT, 35), ERROR);
 		}
-		printf("INIT mutex fork %ld address: %p\n", i, (void *) &(*forks)[i].mutex);
 		i++;
 	}
-	printf("\n");
 	return (SUCCESS);
 }
 
@@ -125,7 +106,7 @@ int	init_philo(t_philo **philo, t_fork *forks, t_table *table)
 		(*philo)[i].meal = 0;
 		(*philo)[i].table = table;
 		assign_fork(&(*philo)[i], forks, i);
-		pthread_mutex_init(&(*philo)[i].mutex_philo, NULL);
+		pthread_mutex_init(&(*philo)[i].mutex_philo, NULL); //secure that
 		i++;
 	}
 	return (0);
@@ -133,7 +114,7 @@ int	init_philo(t_philo **philo, t_fork *forks, t_table *table)
 
 void	assign_fork(t_philo *philo, t_fork *forks, long fork_nbr)
 {
-	if (philo->place % 2 == 0) //EVEN
+	if (philo->place % 2 == 0)
 	{
 		philo->first_fork = &forks[fork_nbr];
 		if (philo->place == philo->table->nbr_of_philo)
@@ -141,7 +122,7 @@ void	assign_fork(t_philo *philo, t_fork *forks, long fork_nbr)
 		else
 			philo->second_fork = &forks[fork_nbr + 1];
 	}
-	else //ODD
+	else
 	{
 		if (philo->place == philo->table->nbr_of_philo)
 			philo->first_fork = &forks[0];

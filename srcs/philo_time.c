@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_time.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:44:25 by allan             #+#    #+#             */
-/*   Updated: 2024/10/14 23:48:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 19:20:13 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_usleep(long usec)
 	long			elapsed;
 	long			rem;
 
-	if (usec <= 0)
+	if (usec < 0)
 		return (write(2, ERR_USEC, 31), 1);
 	gettimeofday(&start, NULL);
 	while (1)
@@ -50,7 +50,7 @@ long	get_time(e_time_unit time_unit)
 	struct timeval	timestamp;
 
 	if (gettimeofday(&timestamp, NULL) == ERROR)
-		return (error_msg(ERR_GET_TIME), -1); //check return
+		return (error_msg(ERR_GET_TIME), -1);
 	if (time_unit == SECOND)
 		return (timestamp.tv_sec + (timestamp.tv_usec / 1000000L));
 	else if (time_unit == MILLISECOND)
@@ -65,7 +65,7 @@ void	wait_everyone(pthread_mutex_t *mutex, t_table *table)
 {
 	while (get_bool(mutex, &table->is_everyone_ready) == FALSE
 		|| table->start_simulation == 0)
-		;
+		ft_usleep(200);
 }
 
 long	print_time(long start)

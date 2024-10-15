@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:22:15 by allan             #+#    #+#             */
-/*   Updated: 2024/10/14 23:35:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 19:19:41 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,39 +71,6 @@ void	error_msg(char *error)
 	if (!error)
 		return ;
 	write(2, error, strlen(error));
-}
-
-void	print_arg(t_table table)
-{
-	printf("nbr_of_philo = %ld\n", table.nbr_of_philo);
-	printf("time_to_die = %ld\n", table.time_to_die);
-	printf("time_to_eat = %ld\n", table.time_to_eat);
-	printf("time_to_sleep = %ld\n", table.time_to_sleep);
-	if (table.meal_to_finish != -1)
-		printf("nbr_of_meal = %ld\n", table.meal_to_finish);
-}
-
-void	print_table(t_philo *philo, t_table *table)
-{
-	long	i;
-
-	i = 0;
-	while (i < philo->table->nbr_of_philo)
-	{
-		printf("First Fork %ld <- Philo %ld -> Second Fork %ld\n", philo[i].first_fork->fork, philo[i].place, philo[i].second_fork->fork);
-		printf("First Fork Address %p Mutex Address %p\n", (void *) &philo[i].first_fork->fork, (void *) &philo[i].first_fork->mutex);
-		printf("Second Fork Address %p Mutex Address %p\n",(void *) &philo[i].second_fork->fork, (void *) &philo[i].second_fork->mutex);
-		i++;
-	}
-	printf("\n");
-	i = 0;
-	printf("TABLE Mutex Address: %p\n", (void *) &table->mutex_table);
-	while (i < philo->table->nbr_of_philo)
-	{
-		printf("Philo %ld Mutex Table Address: %p\n", philo[i].place, (void *) &philo[i].table->mutex_table);
-		printf("Philo %ld Mutex Write Address: %p\n", philo[i].place, (void *) &philo[i].table->write_mutex);
-		i++;
-	}
 }
 
 void	write_status(e_status status, t_philo *philo)
