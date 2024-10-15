@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 14:04:15 by allan             #+#    #+#             */
-/*   Updated: 2024/10/14 23:48:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 15:50:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ bool	is_philo_dead(t_philo *philo)
 	//printf("elapsed/time_to_die: %ld / %ld\n", elapsed, philo->table->time_to_die);
 	if (elapsed > (philo->table->time_to_die / 1000))
 	{
-		printf("%ld died after %ld miliseconds\n", philo->place, elapsed);
+		/* printf("%ld died after %ld miliseconds\n", philo->place, elapsed);
 		printf("elpased = %ld\n", elapsed);
-		printf("last meal = %ld\n", get_long(&philo->mutex_philo, &philo->last_meal));
+		printf("last meal = %ld\n", get_long(&philo->mutex_philo, &philo->last_meal)); */
 		return (TRUE);
 	}
 	else
@@ -83,8 +83,8 @@ bool	wait_simulation_start(pthread_mutex_t *mutex, long *threads, long nbr_philo
 	pthread_mutex_lock(mutex);
 	if (*threads == nbr_philo)
 	{
-		printf("nbr_threads ready %ld\n", *threads);
-		printf("nbr_philo %ld\n", nbr_philo);
+		/* printf("nbr_threads ready %ld\n", *threads);
+		printf("nbr_philo %ld\n", nbr_philo); */
 		ret = true;
 	}
 	pthread_mutex_unlock(mutex);
@@ -97,17 +97,20 @@ void	*set_simulation_finished(void *arg)
 	int				i;
 
 	table = (t_table *)arg;
-	printf("NEW TABLE Mutex Address: %p\n", (void *) &table->mutex_table);
+	//printf("NEW TABLE Mutex Address: %p\n", (void *) &table->mutex_table);
 	while (wait_simulation_start(&table->mutex_table,
 		&table->nbr_philo_ready, table->nbr_of_philo) == FALSE || table->start_simulation == 0)
 		;
-	write_status(DEBUG, table->philo);
+	//write_status(DEBUG, table->philo);
 	while (is_simulation_finished(table) == FALSE)
 	{
 		i = 0;
 		//check if everyone is full
 		if (table->meal_to_finish > 0 && table->nbr_of_philo == table->philo_full)
+		{
 			set_bool(&table->mutex_table, &table->end_simulation, TRUE);
+			//printf("Everyone is full\n");
+		}
 		//	check if philo died
 		while (i < table->nbr_of_philo && is_simulation_finished(table) == FALSE)
 		{

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 01:07:54 by allan             #+#    #+#             */
-/*   Updated: 2024/10/14 23:35:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 15:07:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	*dinning_alone(void *arg);
 void	*cycle_of_life(void *arg);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
-void	ft_think(t_philo *philo);
+void	ft_think(t_philo *philo, bool status_msg);
 
 //set
 void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
@@ -160,4 +160,5 @@ long	print_time(long start);
 
 bool	is_philo_dead(t_philo *philo);
 bool	wait_simulation_start(pthread_mutex_t *mutex, long *threads, long nbr_philo);
+void	desynchronize_philo(t_philo *philo);
 #endif

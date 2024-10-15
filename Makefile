@@ -8,7 +8,8 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= cc
-CFLAGS				= -Wall -Wextra -Werror -I$(INC)
+CFLAGS				= -Wall -Wextra -I$(INC)
+						#-Werror
 RM					= rm -f
 
 # Concatenate all source files

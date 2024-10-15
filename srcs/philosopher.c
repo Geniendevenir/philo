@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:07:19 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 00:05:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/10/15 15:31:19 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ int	philosopher(t_philo *philo, t_fork *forks, t_table *table)
 			}
 			i++;
 		}
-		//tracker_simulation is finished;
 	}
+	//tracker_simulation is finished;
 	if (pthread_create((&table->track_end_simulation), NULL, set_simulation_finished, table) == ERROR)
 	{
 		free_forks(forks, table->nbr_of_philo);
@@ -101,6 +101,21 @@ int	philosopher(t_philo *philo, t_fork *forks, t_table *table)
 	return (SUCCESS);
 }
 
+void	desynchronize_philo(t_philo *philo)
+{
+	if (philo->table->nbr_of_philo % 2 == 0)
+	{
+		if (philo->place % 2 == 0)
+			ft_usleep(30);
+	}
+	else if (philo->table->nbr_of_philo % 2 != 0)
+	{
+		if (philo->place % 2)
+			ft_think(philo, 0);
+	}
+	return ;
+}
+
 void	*cycle_of_life(void *arg)
 {
 	t_philo			*philo;
@@ -109,7 +124,8 @@ void	*cycle_of_life(void *arg)
 	wait_everyone(&philo->table->mutex_table, philo->table);
 	set_long(&philo->mutex_philo, &philo->last_meal, get_time(MILLISECOND));
 	incr_long(&philo->table->mutex_table, &philo->table->nbr_philo_ready);
-	
+	//desynchronization
+	desynchronize_philo(philo);
 	while (is_simulation_finished(philo->table) == FALSE)
 	{
 		//is_full?
@@ -117,14 +133,14 @@ void	*cycle_of_life(void *arg)
 			&& philo->meal == philo->table->meal_to_finish)
 		{
 			incr_long(&philo->table->mutex_table, &philo->table->philo_full);
-			printf("%ld is full after %ld meals\n", philo->place, philo->meal);
+			//printf("%ld is full after %ld meals\n", philo->place, philo->meal);
 		}
 		//eat
 		ft_eat(philo);
 		//sleep
 		ft_sleep(philo);
 		//think
-		ft_think(philo);
+		ft_think(philo, 1);
 	}
 	return (0);
 }
@@ -168,11 +184,26 @@ void	ft_sleep(t_philo *philo)
 	start = get_time(MILLISECOND);
 	ft_usleep(philo->table->time_to_sleep);
 	end = get_time(MILLISECOND);
-	printf("%ld sleept for %ld\n", philo->place, end - start);
+	//printf("%ld sleept for %ld\n", philo->place, end - start);
 }
 
-void	ft_think(t_philo *philo)
+void	ft_think(t_philo *philo, bool status_msg)
 {
-	write_status(THINKING, philo);
-	//add fairness
+	long	time_eat;
+	long	time_sleep;
+	long	time_think;
+
+	if (status_msg == 1)
+		write_status(THINKING, philo);
+	if (philo->table->nbr_of_philo % 2 == 0)
+		return ;
+	else if (philo->table->nbr_of_philo % 2 != 0)
+	{
+		time_eat = philo->table->time_to_eat;
+		time_sleep = philo->table->time_to_sleep;
+		time_think = (time_eat * 2) - time_sleep;
+		if (time_think < 0)
+			time_think = 0;
+		ft_usleep(time_think * 0.42);
+	}
 }
