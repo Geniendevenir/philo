@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 12:07:19 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:21 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:54:44 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,24 @@ int	philosopher(t_philo *philo, t_fork *forks, t_table *table)
 		return (free_all(philo, forks, table), SUCCESS);
 	if (table->nbr_of_philo == 1)
 	{
-		if (pthread_create((&philo[i].thread), NULL, dinning_alone, &philo[i]) == ERROR)
-			return (free_all(philo, forks, table), write(2, ERR_THREAD, strlen(ERR_THREAD)), ERROR);
+		if (init_single_thread(philo, forks, table) == ERROR)
+			return (ERROR);
 	}
 	else
 	{
-		while (i < table->nbr_of_philo)
-		{
-			if (pthread_create((&philo[i].thread), NULL, cycle_of_life, &philo[i]) == ERROR)
-				return (error_join_threads(philo, i - 1),
-					free_all(philo, forks, table),
-					write(2, ERR_THREAD, strlen(ERR_THREAD)), ERROR);
-			i++;
-		}
+		if (init_mutli_threads(philo, forks, table) == ERROR)
+			return (ERROR);
 	}
-	if (pthread_create((&table->track_end_simulation), NULL, set_simulation_finished, table) == ERROR)
-		return (error_join_threads(philo, i),
-			free_all(philo, forks, table),
-			write(2, ERR_THREAD, strlen(ERR_THREAD)), ERROR);
+	if (pthread_create((&table->track_end_simulation),
+			NULL, set_simulation_finished, table) == ERROR)
+	{
+		error_join_threads(philo, i);
+		free_all(philo, forks, table);
+		return (error_msg(ERR_THREAD), ERROR);
+	}
 	table->start_simulation = get_time(MILLISECOND);
 	set_bool(&table->mutex_table, &table->is_everyone_ready, TRUE);
-	join_threads(philo, table);
-	free_all(philo, forks, table);
-	return (SUCCESS);
+	return (join_threads(philo, table), free_all(philo, forks, table), SUCCESS);
 }
 
 void	*cycle_of_life(void *arg)

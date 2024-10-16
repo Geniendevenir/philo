@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 02:22:15 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:22 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:06:26 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,21 @@ long	ft_atol(const char *nptr)
 	return (nbr * sign);
 }
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
 		return (DIGIT);
 	return (NOT_DIGIT);
-}
-
-int	is_valid_arg(long value, int type)
-{
-	if (type == ARG_PHILO)
-	{
-		if (value < 1 || value > 200)
-			return (write(2, ERR_FIRST_ARG, 71), NOT_VALID);
-	}
-	else if (type == ARG_TIME)
-	{
-		if (value < 60 || value > INT_MAX)
-			return (write(2, ERR_TIME_ARG, 67), NOT_VALID);
-	}
-	else if (type == ARG_MEAL)
-	{
-		if (value < 1 || value > INT_MAX)
-			return (write(2, ERR_LAST_ARG, 72), NOT_VALID);
-	}
-	return (VALID);
 }
 
 void	error_msg(char *error)
@@ -73,7 +63,7 @@ void	error_msg(char *error)
 	write(2, error, strlen(error));
 }
 
-void	write_status(e_status status, t_philo *philo)
+void	write_status(t_status status, t_philo *philo)
 {
 	long	time;
 

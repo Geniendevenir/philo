@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_init.c                                       :+:      :+:    :+:   */
+/*   philo_init_arg.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:40:43 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:24 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:53:33 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	init_table(int argc, char **argv, t_table *table)
 	if (init_table_arg(argc, argv, table) == ERROR)
 		return (ERROR);
 	if (pthread_mutex_init(&table->mutex_table, NULL) != SUCCESS)
-		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
+		return (error_msg(ERR_MUTEX_INIT), ERROR);
 	if (pthread_mutex_init(&table->write_mutex, NULL) != SUCCESS)
 	{
 		pthread_mutex_destroy(&table->mutex_table);
-		return (write(2, ERR_MUTEX_INIT, 35), ERROR);
+		return (error_msg(ERR_MUTEX_INIT), ERROR);
 	}
 	return (SUCCESS);
 }
@@ -67,7 +67,7 @@ int	init_fork(t_fork **forks, t_table *table)
 	{
 		pthread_mutex_destroy(&table->mutex_table);
 		pthread_mutex_destroy(&table->write_mutex);
-		return (write(1, ERR_MALLOC_FORK, 37), ERROR);
+		return (error_msg(ERR_MALLOC_FORK), ERROR);
 	}
 	while (i < table->nbr_of_philo)
 	{
@@ -77,7 +77,7 @@ int	init_fork(t_fork **forks, t_table *table)
 			free_forks(*forks, i);
 			pthread_mutex_destroy(&table->mutex_table);
 			pthread_mutex_destroy(&table->write_mutex);
-			return (write(2, ERR_MUTEX_INIT, 35), ERROR);
+			return (error_msg(ERR_MUTEX_INIT), ERROR);
 		}
 		i++;
 	}
@@ -95,7 +95,7 @@ int	init_philo(t_philo **philo, t_fork *forks, t_table *table)
 		free_forks(forks, table->nbr_of_philo);
 		pthread_mutex_destroy(&table->mutex_table);
 		pthread_mutex_destroy(&table->write_mutex);
-		return (write(2, ERR_MALLOC_PHILO, 38), ERROR);
+		return (error_msg(ERR_MALLOC_PHILO), ERROR);
 	}
 	table->philo = *philo;
 	while (i < table->nbr_of_philo)

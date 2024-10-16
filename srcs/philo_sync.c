@@ -6,13 +6,14 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 17:55:33 by adebert           #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:28 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:31:19 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-bool	wait_simulation_start(pthread_mutex_t *mutex, long *threads, long nbr_philo)
+bool	wait_simulation_start(pthread_mutex_t *mutex,
+		long *threads, long nbr_philo)
 {
 	bool	ret;
 
@@ -20,6 +21,7 @@ bool	wait_simulation_start(pthread_mutex_t *mutex, long *threads, long nbr_philo
 	pthread_mutex_lock(mutex);
 	if (*threads == nbr_philo)
 		ret = true;
+	pthread_mutex_unlock(mutex);
 	return (ret);
 }
 

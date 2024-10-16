@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 17:57:26 by adebert           #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:29 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:34:25 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,25 @@ bool	is_simulation_finished(t_table *table)
 
 void	*set_simulation_finished(void *arg)
 {
-	t_table			*table;
+	t_table			*t;
 	int				i;
 
-	table = (t_table *)arg;
-	while (wait_simulation_start(&table->mutex_table,
-			&table->nbr_philo_ready, table->nbr_of_philo) == FALSE
-		|| table->start_simulation == 0)
+	t = (t_table *)arg;
+	while (wait_simulation_start(&t->mutex_table,
+			&t->nbr_philo_ready, t->nbr_of_philo) == FALSE
+		|| t->start_simulation == 0)
 		ft_usleep(200);
-	while (is_simulation_finished(table) == FALSE)
+	while (is_simulation_finished(t) == FALSE)
 	{
 		i = 0;
-		if (table->meal_to_finish > 0
-			&& table->nbr_of_philo == table->philo_full)
-			set_bool(&table->mutex_table, &table->end_simulation, TRUE);
-		while (i < table->nbr_of_philo
-			&& is_simulation_finished(table) == FALSE)
+		if (t->meal_to_finish > 0 && t->nbr_of_philo == t->philo_full)
+			set_bool(&t->mutex_table, &t->end_simulation, TRUE);
+		while (i < t->nbr_of_philo && is_simulation_finished(t) == FALSE)
 		{
-			if (is_philo_dead(table->philo + i) == TRUE)
+			if (is_philo_dead(t->philo + i) == TRUE)
 			{
-				set_bool(&table->mutex_table, &table->end_simulation, TRUE);
-				write_status(DIED, table->philo + i);
+				set_bool(&t->mutex_table, &t->end_simulation, TRUE);
+				write_status(DIED, t->philo + i);
 			}
 			i++;
 		}

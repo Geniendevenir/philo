@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 01:05:54 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:21 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:48:53 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	forks = NULL;
 	philo = NULL;
 	if (argc < 5 || argc > 6)
-		return (write(1, ERR_NBR_ARG, 56), 1);
+		return (error_msg(ERR_NBR_ARG), ERROR);
 	if (check_arg(argv) == ERROR)
 		return (ERROR);
 	if (init_table(argc, argv, &table) == ERROR)

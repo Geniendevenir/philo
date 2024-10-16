@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 01:52:30 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:24 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 12:52:12 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	error_join_threads(t_philo *philo, long to_join)
 	while (i < to_join)
 	{
 		if (pthread_join(philo[i].thread, NULL) != SUCCESS)
-			write(2, ERR_JOIN, strlen(ERR_JOIN));
+			error_msg(ERR_JOIN);
 		i++;
 	}
 }
@@ -58,9 +58,9 @@ void	join_threads(t_philo *philo, t_table *table)
 	while (i < table->nbr_of_philo)
 	{
 		if (pthread_join(philo[i].thread, NULL) != SUCCESS)
-			write(2, ERR_JOIN, strlen(ERR_JOIN));
+			error_msg(ERR_JOIN);
 		i++;
 	}
 	if (pthread_join(table->track_end_simulation, NULL) != SUCCESS)
-		write(2, ERR_JOIN, strlen(ERR_JOIN));
+		error_msg(ERR_JOIN);
 }

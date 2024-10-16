@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:44:25 by allan             #+#    #+#             */
-/*   Updated: 2024/10/15 19:24:22 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 13:06:01 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_usleep(long usec)
 	long			rem;
 
 	if (usec < 0)
-		return (write(2, ERR_USEC, 31), 1);
+		return (write(2, ERR_USEC, ft_strlen(ERR_USEC)), ERROR);
 	gettimeofday(&start, NULL);
 	while (1)
 	{
@@ -41,11 +41,13 @@ int	ft_usleep(long usec)
 			break ;
 		if (rem > 1000)
 			usleep(rem / 2);
+		else
+			usleep(200);
 	}
 	return (0);
 }
 
-long	get_time(e_time_unit time_unit)
+long	get_time(t_time_unit time_unit)
 {
 	struct timeval	timestamp;
 

@@ -8,22 +8,22 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= cc
-CFLAGS				= -Wall -Wextra -I$(INC)
-						#-Werror
+CFLAGS				= -Wall -Wextra -Werror -I$(INC)
 RM					= rm -f
 
 # Concatenate all source files
 SRCS 				=	srcs/main.c\
+						srcs/philo_check_arg.c\
+						srcs/philo_init_arg.c\
+						srcs/philo_init_threads.c\
 						srcs/philosopher.c\
-						srcs/philo_init.c\
-						srcs/philo_utils.c\
-						srcs/philo_free.c\
+						srcs/philo_alone.c\
+						srcs/philo_sync.c\
 						srcs/philo_time.c\
 						srcs/philo_set_get.c\
-						srcs/philo_alone.c\
-						srcs/philo_check_arg.c\
 						srcs/philo_finish.c\
-						srcs/philo_sync.c\
+						srcs/philo_utils.c\
+						srcs/philo_free.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
