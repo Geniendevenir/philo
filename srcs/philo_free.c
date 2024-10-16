@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 01:52:30 by allan             #+#    #+#             */
-/*   Updated: 2024/10/16 12:52:12 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:19 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,11 @@ void	join_threads(t_philo *philo, t_table *table)
 	}
 	if (pthread_join(table->track_end_simulation, NULL) != SUCCESS)
 		error_msg(ERR_JOIN);
+}
+
+void	free_error(t_fork *forks, t_table *table)
+{
+	free_forks(forks, table->nbr_of_philo);
+	pthread_mutex_destroy(&table->mutex_table);
+	pthread_mutex_destroy(&table->write_mutex);
 }

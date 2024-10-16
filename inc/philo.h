@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 12:35:31 by adebert           #+#    #+#             */
-/*   Updated: 2024/10/16 13:07:13 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:07 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void	free_all(t_philo *philo, t_fork *forks, t_table *table);
 void	free_forks(t_fork *forks, long nbr_of_fork);
 void	error_join_threads(t_philo *philo, long to_join);
 void	join_threads(t_philo *philo, t_table *table);
+void	free_error(t_fork *forks, t_table *table);
 
 //philo_time
 long	get_elapsed_time_microseconds(struct timeval start, struct timeval end);

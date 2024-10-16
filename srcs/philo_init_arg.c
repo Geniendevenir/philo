@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 03:40:43 by allan             #+#    #+#             */
-/*   Updated: 2024/10/16 12:53:33 by adebert          ###   ########.fr       */
+/*   Updated: 2024/10/16 14:06:22 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	init_fork(t_fork **forks, t_table *table)
 	while (i < table->nbr_of_philo)
 	{
 		(*forks)[i].fork = i;
-		if (pthread_mutex_init((&(*forks)[i].mutex), NULL) == ERROR)
+		if (pthread_mutex_init((&(*forks)[i].mutex), NULL) != SUCCESS)
 		{
 			free_forks(*forks, i);
 			pthread_mutex_destroy(&table->mutex_table);
@@ -92,9 +92,7 @@ int	init_philo(t_philo **philo, t_fork *forks, t_table *table)
 	*philo = malloc(sizeof(t_philo) * table->nbr_of_philo);
 	if (!*philo)
 	{
-		free_forks(forks, table->nbr_of_philo);
-		pthread_mutex_destroy(&table->mutex_table);
-		pthread_mutex_destroy(&table->write_mutex);
+		free_error(forks, table);
 		return (error_msg(ERR_MALLOC_PHILO), ERROR);
 	}
 	table->philo = *philo;
@@ -106,7 +104,9 @@ int	init_philo(t_philo **philo, t_fork *forks, t_table *table)
 		(*philo)[i].meal = 0;
 		(*philo)[i].table = table;
 		assign_fork(&(*philo)[i], forks, i);
-		pthread_mutex_init(&(*philo)[i].mutex_philo, NULL); //secure that
+		if (pthread_mutex_init(&(*philo)[i].mutex_philo, NULL) != SUCCESS)
+			return (free_error(forks, table),
+				free(philo), error_msg(ERR_MUTEX_INIT), ERROR);
 		i++;
 	}
 	return (0);
